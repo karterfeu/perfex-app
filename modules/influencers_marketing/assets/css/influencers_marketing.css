@@ -1,0 +1,854 @@
+/*
+ * Influencers Marketing Module - Main Stylesheet
+ * Modern, clean and responsive design
+ */
+
+:root {
+    --im-primary: #3498db;
+    --im-primary-dark: #2980b9;
+    --im-success: #2ecc71;
+    --im-danger: #e74c3c;
+    --im-warning: #f39c12;
+    --im-info: #1abc9c;
+    --im-purple: #9b59b6;
+    --im-pink: #e91e63;
+
+    --im-bg-primary: #ffffff;
+    --im-bg-secondary: #f8f9fa;
+    --im-bg-tertiary: #f0f0f0;
+    --im-text-primary: #2c3e50;
+    --im-text-secondary: #7f8c8d;
+    --im-border: #e0e0e0;
+    --im-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    --im-shadow-lg: 0 4px 16px rgba(0,0,0,0.12);
+}
+
+/* ========================
+   Layout & Structure
+   ======================== */
+
+.im-container {
+    padding: 20px;
+}
+
+.im-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.im-header h1 {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--im-text-primary);
+    margin: 0;
+}
+
+.im-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* ========================
+   Cards
+   ======================== */
+
+.im-card {
+    background: var(--im-bg-primary);
+    border-radius: 12px;
+    box-shadow: var(--im-shadow);
+    padding: 24px;
+    margin-bottom: 20px;
+    border: 1px solid var(--im-border);
+    transition: all 0.3s ease;
+}
+
+.im-card:hover {
+    box-shadow: var(--im-shadow-lg);
+    transform: translateY(-2px);
+}
+
+.im-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--im-bg-secondary);
+}
+
+.im-card-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--im-text-primary);
+    margin: 0;
+}
+
+.im-card-body {
+    padding: 10px 0;
+}
+
+.im-card-footer {
+    padding-top: 15px;
+    margin-top: 15px;
+    border-top: 1px solid var(--im-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* ========================
+   Stats Cards
+   ======================== */
+
+.im-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.im-stat-card {
+    background: linear-gradient(135deg, var(--im-primary) 0%, var(--im-primary-dark) 100%);
+    border-radius: 12px;
+    padding: 24px;
+    color: white;
+    box-shadow: var(--im-shadow);
+    transition: all 0.3s ease;
+}
+
+.im-stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--im-shadow-lg);
+}
+
+.im-stat-card.success {
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+}
+
+.im-stat-card.warning {
+    background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+}
+
+.im-stat-card.danger {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+}
+
+.im-stat-card.purple {
+    background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+}
+
+.im-stat-label {
+    font-size: 14px;
+    opacity: 0.9;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.im-stat-value {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.im-stat-change {
+    font-size: 13px;
+    opacity: 0.85;
+}
+
+.im-stat-icon {
+    position: absolute;
+    right: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 48px;
+    opacity: 0.2;
+}
+
+/* ========================
+   Influencer Cards
+   ======================== */
+
+.im-influencers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.im-influencer-card {
+    background: var(--im-bg-primary);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: var(--im-shadow);
+    border: 1px solid var(--im-border);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.im-influencer-card:hover {
+    box-shadow: var(--im-shadow-lg);
+    transform: translateY(-4px);
+}
+
+.im-influencer-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.im-influencer-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--im-primary);
+}
+
+.im-influencer-avatar-placeholder {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--im-primary), var(--im-primary-dark));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 600;
+    color: white;
+}
+
+.im-influencer-info h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--im-text-primary);
+    margin: 0 0 5px 0;
+}
+
+.im-influencer-category {
+    font-size: 13px;
+    color: var(--im-text-secondary);
+}
+
+.im-score-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: var(--im-primary);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.im-score-badge.excellent {
+    background: var(--im-success);
+}
+
+.im-score-badge.good {
+    background: var(--im-info);
+}
+
+.im-score-badge.average {
+    background: var(--im-warning);
+}
+
+.im-score-badge.poor {
+    background: var(--im-danger);
+}
+
+.im-social-accounts {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.im-social-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.im-social-icon:hover {
+    transform: scale(1.1);
+}
+
+.im-social-icon.instagram {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+}
+
+.im-social-icon.youtube {
+    background: #FF0000;
+}
+
+.im-social-icon.tiktok {
+    background: #000000;
+}
+
+.im-social-icon.facebook {
+    background: #1877F2;
+}
+
+.im-social-icon.twitter {
+    background: #1DA1F2;
+}
+
+.im-social-icon.linkedin {
+    background: #0A66C2;
+}
+
+.im-social-icon.twitch {
+    background: #9146FF;
+}
+
+.im-stats-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.im-stat-item {
+    text-align: center;
+    padding: 10px;
+    background: var(--im-bg-secondary);
+    border-radius: 8px;
+}
+
+.im-stat-item-label {
+    font-size: 11px;
+    color: var(--im-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.im-stat-item-value {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--im-text-primary);
+}
+
+.im-influencer-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 15px;
+}
+
+.im-tag {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    background: var(--im-bg-secondary);
+    color: var(--im-text-primary);
+}
+
+.im-influencer-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.im-btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.im-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.im-btn-primary {
+    background: var(--im-primary);
+    color: white;
+}
+
+.im-btn-primary:hover {
+    background: var(--im-primary-dark);
+}
+
+.im-btn-success {
+    background: var(--im-success);
+    color: white;
+}
+
+.im-btn-danger {
+    background: var(--im-danger);
+    color: white;
+}
+
+.im-btn-outline {
+    background: transparent;
+    border: 2px solid var(--im-primary);
+    color: var(--im-primary);
+}
+
+.im-btn-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--im-bg-secondary);
+    color: var(--im-text-primary);
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.im-btn-icon:hover {
+    background: var(--im-primary);
+    color: white;
+}
+
+/* ========================
+   Search & Filters
+   ======================== */
+
+.im-search-bar {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.im-search-input {
+    flex: 1;
+    min-width: 250px;
+    padding: 12px 20px;
+    border: 2px solid var(--im-border);
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.im-search-input:focus {
+    outline: none;
+    border-color: var(--im-primary);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.im-filter-select {
+    padding: 12px 20px;
+    border: 2px solid var(--im-border);
+    border-radius: 8px;
+    font-size: 14px;
+    background: var(--im-bg-primary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.im-filter-select:focus {
+    outline: none;
+    border-color: var(--im-primary);
+}
+
+/* ========================
+   View Switcher
+   ======================== */
+
+.im-view-switcher {
+    display: flex;
+    gap: 5px;
+    background: var(--im-bg-secondary);
+    padding: 4px;
+    border-radius: 8px;
+}
+
+.im-view-btn {
+    padding: 8px 16px;
+    border: none;
+    background: transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--im-text-secondary);
+}
+
+.im-view-btn.active {
+    background: var(--im-bg-primary);
+    color: var(--im-primary);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* ========================
+   Modal Styles
+   ======================== */
+
+.im-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 9998;
+    display: none;
+}
+
+.im-modal-backdrop.active {
+    display: block;
+}
+
+.im-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--im-bg-primary);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    z-index: 9999;
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    display: none;
+}
+
+.im-modal.active {
+    display: block;
+}
+
+.im-modal-header {
+    padding: 20px 24px;
+    border-bottom: 2px solid var(--im-bg-secondary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.im-modal-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--im-text-primary);
+    margin: 0;
+}
+
+.im-modal-close {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: var(--im-bg-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.im-modal-close:hover {
+    background: var(--im-danger);
+    color: white;
+}
+
+.im-modal-body {
+    padding: 24px;
+}
+
+.im-modal-footer {
+    padding: 20px 24px;
+    border-top: 2px solid var(--im-bg-secondary);
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* ========================
+   Forms
+   ======================== */
+
+.im-form-group {
+    margin-bottom: 20px;
+}
+
+.im-form-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--im-text-primary);
+    margin-bottom: 8px;
+}
+
+.im-form-input,
+.im-form-select,
+.im-form-textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--im-border);
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.im-form-input:focus,
+.im-form-select:focus,
+.im-form-textarea:focus {
+    outline: none;
+    border-color: var(--im-primary);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.im-form-textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.im-form-help {
+    font-size: 12px;
+    color: var(--im-text-secondary);
+    margin-top: 6px;
+}
+
+/* ========================
+   Tables
+   ======================== */
+
+.im-table-container {
+    background: var(--im-bg-primary);
+    border-radius: 12px;
+    box-shadow: var(--im-shadow);
+    overflow: hidden;
+}
+
+.im-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.im-table thead {
+    background: var(--im-bg-secondary);
+}
+
+.im-table th {
+    padding: 16px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--im-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.im-table td {
+    padding: 16px;
+    border-top: 1px solid var(--im-border);
+}
+
+.im-table tbody tr {
+    transition: all 0.2s ease;
+}
+
+.im-table tbody tr:hover {
+    background: var(--im-bg-secondary);
+}
+
+/* ========================
+   Status Badges
+   ======================== */
+
+.im-status-badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.im-status-badge.prospect {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.im-status-badge.contacted {
+    background: #fff3e0;
+    color: #f57c00;
+}
+
+.im-status-badge.negotiating {
+    background: #f3e5f5;
+    color: #7b1fa2;
+}
+
+.im-status-badge.active {
+    background: #e8f5e9;
+    color: #388e3c;
+}
+
+.im-status-badge.inactive {
+    background: #fafafa;
+    color: #616161;
+}
+
+/* ========================
+   Progress Bars
+   ======================== */
+
+.im-progress {
+    width: 100%;
+    height: 8px;
+    background: var(--im-bg-secondary);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.im-progress-bar {
+    height: 100%;
+    background: var(--im-primary);
+    transition: width 0.3s ease;
+}
+
+.im-progress-bar.success {
+    background: var(--im-success);
+}
+
+.im-progress-bar.warning {
+    background: var(--im-warning);
+}
+
+.im-progress-bar.danger {
+    background: var(--im-danger);
+}
+
+/* ========================
+   Charts Container
+   ======================== */
+
+.im-chart-container {
+    position: relative;
+    height: 300px;
+    margin: 20px 0;
+}
+
+/* ========================
+   Responsive Design
+   ======================== */
+
+@media (max-width: 768px) {
+    .im-stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .im-influencers-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .im-search-bar {
+        flex-direction: column;
+    }
+
+    .im-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .im-actions {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .im-modal {
+        width: 95%;
+    }
+}
+
+/* ========================
+   Animations
+   ======================== */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.im-fade-in {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+.im-slide-in {
+    animation: slideIn 0.3s ease;
+}
+
+/* ========================
+   Utilities
+   ======================== */
+
+.im-text-center {
+    text-align: center;
+}
+
+.im-text-right {
+    text-align: right;
+}
+
+.im-mb-0 { margin-bottom: 0 !important; }
+.im-mb-1 { margin-bottom: 10px !important; }
+.im-mb-2 { margin-bottom: 20px !important; }
+.im-mb-3 { margin-bottom: 30px !important; }
+
+.im-mt-0 { margin-top: 0 !important; }
+.im-mt-1 { margin-top: 10px !important; }
+.im-mt-2 { margin-top: 20px !important; }
+.im-mt-3 { margin-top: 30px !important; }
+
+.im-flex {
+    display: flex;
+}
+
+.im-flex-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.im-flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.im-gap-1 { gap: 10px; }
+.im-gap-2 { gap: 20px; }
+.im-gap-3 { gap: 30px; }

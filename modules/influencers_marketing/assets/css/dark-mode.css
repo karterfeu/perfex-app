@@ -1,0 +1,208 @@
+/*
+ * Influencers Marketing Module - Dark Mode Stylesheet
+ * Elegant dark theme for reduced eye strain
+ */
+
+[data-theme="dark"] {
+    --im-bg-primary: #1e1e1e;
+    --im-bg-secondary: #2d2d2d;
+    --im-bg-tertiary: #3d3d3d;
+    --im-text-primary: #e0e0e0;
+    --im-text-secondary: #a0a0a0;
+    --im-border: #3d3d3d;
+    --im-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    --im-shadow-lg: 0 4px 16px rgba(0,0,0,0.4);
+}
+
+/* Dark mode toggle button */
+.im-dark-mode-toggle {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--im-primary);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.im-dark-mode-toggle:hover {
+    transform: scale(1.1) rotate(15deg);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+}
+
+/* Dark mode specific adjustments */
+[data-theme="dark"] .im-card {
+    background: var(--im-bg-primary);
+    border-color: var(--im-border);
+}
+
+[data-theme="dark"] .im-card:hover {
+    box-shadow: var(--im-shadow-lg);
+}
+
+[data-theme="dark"] .im-influencer-card {
+    background: var(--im-bg-primary);
+    border-color: var(--im-border);
+}
+
+[data-theme="dark"] .im-table-container {
+    background: var(--im-bg-primary);
+}
+
+[data-theme="dark"] .im-table thead {
+    background: var(--im-bg-secondary);
+}
+
+[data-theme="dark"] .im-table td {
+    border-top-color: var(--im-border);
+}
+
+[data-theme="dark"] .im-table tbody tr:hover {
+    background: var(--im-bg-secondary);
+}
+
+[data-theme="dark"] .im-search-input,
+[data-theme="dark"] .im-filter-select,
+[data-theme="dark"] .im-form-input,
+[data-theme="dark"] .im-form-select,
+[data-theme="dark"] .im-form-textarea {
+    background: var(--im-bg-secondary);
+    border-color: var(--im-border);
+    color: var(--im-text-primary);
+}
+
+[data-theme="dark"] .im-stat-item {
+    background: var(--im-bg-tertiary);
+}
+
+[data-theme="dark"] .im-tag {
+    background: var(--im-bg-tertiary);
+    color: var(--im-text-primary);
+}
+
+[data-theme="dark"] .im-btn-icon {
+    background: var(--im-bg-secondary);
+    color: var(--im-text-primary);
+}
+
+[data-theme="dark"] .im-btn-icon:hover {
+    background: var(--im-primary);
+    color: white;
+}
+
+[data-theme="dark"] .im-view-switcher {
+    background: var(--im-bg-secondary);
+}
+
+[data-theme="dark"] .im-view-btn.active {
+    background: var(--im-bg-tertiary);
+}
+
+[data-theme="dark"] .im-modal {
+    background: var(--im-bg-primary);
+}
+
+[data-theme="dark"] .im-modal-header,
+[data-theme="dark"] .im-modal-footer {
+    border-color: var(--im-border);
+}
+
+[data-theme="dark"] .im-modal-close {
+    background: var(--im-bg-secondary);
+    color: var(--im-text-primary);
+}
+
+[data-theme="dark"] .im-progress {
+    background: var(--im-bg-tertiary);
+}
+
+/* Dark mode animations */
+[data-theme="dark"] * {
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+/* Settings toggle */
+.im-settings-section {
+    margin-bottom: 25px;
+}
+
+.im-settings-label {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--im-text-primary);
+    margin-bottom: 10px;
+    display: block;
+}
+
+.im-switch {
+    position: relative;
+    display: inline-block;
+    width: 52px;
+    height: 28px;
+}
+
+.im-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.im-switch-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 28px;
+}
+
+.im-switch-slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+.im-switch input:checked + .im-switch-slider {
+    background-color: var(--im-primary);
+}
+
+.im-switch input:checked + .im-switch-slider:before {
+    transform: translateX(24px);
+}
+
+/* Moon/Sun icons for dark mode toggle */
+.im-icon-moon:before {
+    content: "🌙";
+}
+
+.im-icon-sun:before {
+    content: "☀️";
+}
+
+/* Smooth transitions for theme switching */
+.im-theme-transition,
+.im-theme-transition * {
+    transition: background-color 0.3s ease,
+                border-color 0.3s ease,
+                color 0.3s ease,
+                box-shadow 0.3s ease !important;
+}
