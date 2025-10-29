@@ -74,6 +74,8 @@
                                 </div>
                             </div>
 
+                            <!-- Dark mode option removed - conflicts with internal chat -->
+                            <!--
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="im_enable_dark_mode">
@@ -82,6 +84,7 @@
                                     </label>
                                 </div>
                             </div>
+                            -->
                         </div>
 
                         <div class="row mtop25">

@@ -108,7 +108,8 @@ function influencers_marketing_add_head_components()
     $isRTL = (is_rtl(true) ? 'true' : 'false');
 
     echo '<link rel="stylesheet" type="text/css" href="' . module_dir_url(INFLUENCERS_MARKETING_MODULE_NAME, 'assets/css/influencers_marketing.css') . '?v=' . INFLUENCERS_MARKETING_VERSION . '">';
-    echo '<link rel="stylesheet" type="text/css" href="' . module_dir_url(INFLUENCERS_MARKETING_MODULE_NAME, 'assets/css/dark-mode.css') . '?v=' . INFLUENCERS_MARKETING_VERSION . '">';
+    // Dark mode disabled - conflicts with internal chat
+    // echo '<link rel="stylesheet" type="text/css" href="' . module_dir_url(INFLUENCERS_MARKETING_MODULE_NAME, 'assets/css/dark-mode.css') . '?v=' . INFLUENCERS_MARKETING_VERSION . '">';
 
     // Chart.js for analytics
     echo '<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>';
@@ -122,7 +123,8 @@ function influencers_marketing_load_js()
     $CI = &get_instance();
 
     echo '<script src="' . module_dir_url(INFLUENCERS_MARKETING_MODULE_NAME, 'assets/js/influencers_marketing.js') . '?v=' . INFLUENCERS_MARKETING_VERSION . '"></script>';
-    echo '<script src="' . module_dir_url(INFLUENCERS_MARKETING_MODULE_NAME, 'assets/js/dark-mode.js') . '?v=' . INFLUENCERS_MARKETING_VERSION . '"></script>';
+    // Dark mode disabled - conflicts with internal chat
+    // echo '<script src="' . module_dir_url(INFLUENCERS_MARKETING_MODULE_NAME, 'assets/js/dark-mode.js') . '?v=' . INFLUENCERS_MARKETING_VERSION . '"></script>';
     echo '<script src="' . module_dir_url(INFLUENCERS_MARKETING_MODULE_NAME, 'assets/js/analytics.js') . '?v=' . INFLUENCERS_MARKETING_VERSION . '"></script>';
 }
 
