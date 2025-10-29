@@ -406,18 +406,55 @@ class Influencers_marketing extends AdminController
         if ($this->input->post()) {
             $data = $this->input->post();
 
+            // Extract influencer IDs if provided
+            $influencer_ids = null;
+            if (isset($data['influencer_ids']) && !empty($data['influencer_ids'])) {
+                $influencer_ids = explode(',', $data['influencer_ids']);
+                unset($data['influencer_ids']);
+            }
+
             if ($id == '') {
+                // Create new campaign
                 $campaign_id = $this->campaigns_model->add($data);
                 if ($campaign_id) {
+                    // Add influencers to campaign if provided
+                    if ($influencer_ids && is_array($influencer_ids)) {
+                        foreach ($influencer_ids as $influencer_id) {
+                            $this->campaigns_model->add_influencer_to_campaign($campaign_id, [
+                                'influencer_id' => $influencer_id,
+                                'status' => 'prospect',
+                                'added_at' => date('Y-m-d H:i:s')
+                            ]);
+                        }
+                    }
+
                     set_alert('success', _l('added_successfully', _l('im_campaign')));
-                    redirect(admin_url('influencers_marketing/campaign/' . $campaign_id));
+                    redirect(admin_url('influencers_marketing/campaign_form/' . $campaign_id));
                 }
             } else {
+                // Update existing campaign
                 $success = $this->campaigns_model->update($id, $data);
+
+                // Update influencers if provided
+                if ($influencer_ids && is_array($influencer_ids)) {
+                    // Remove all existing influencers
+                    $this->db->where('campaign_id', $id);
+                    $this->db->delete(db_prefix() . 'im_campaign_influencers');
+
+                    // Add new ones
+                    foreach ($influencer_ids as $influencer_id) {
+                        $this->campaigns_model->add_influencer_to_campaign($id, [
+                            'influencer_id' => $influencer_id,
+                            'status' => 'prospect',
+                            'added_at' => date('Y-m-d H:i:s')
+                        ]);
+                    }
+                }
+
                 if ($success) {
                     set_alert('success', _l('updated_successfully', _l('im_campaign')));
                 }
-                redirect(admin_url('influencers_marketing/campaign/' . $id));
+                redirect(admin_url('influencers_marketing/campaign_form/' . $id));
             }
         }
 
@@ -857,5 +894,127 @@ class Influencers_marketing extends AdminController
 
         set_alert('success', "Permissions activées pour $updated rôle(s). $already_exists étaient déjà actives.");
         redirect(admin_url('influencers_marketing/settings'));
+    }
+
+    // ============================================
+    // CAMPAIGN CONTENTS & INFLUENCERS AJAX METHODS
+    // ============================================
+
+    /**
+     * Get available influencers for campaign selection (AJAX)
+     */
+    public function get_available_influencers()
+    {
+        if (!$this->input->is_ajax_request()) {
+            show_404();
+        }
+
+        $search = $this->input->get('search');
+
+        $influencers = $this->influencers_model->get_influencers([
+            'search' => $search,
+            'limit' => 50,
+            'offset' => 0
+        ]);
+
+        header('Content-Type: application/json');
+        echo json_encode(['influencers' => $influencers]);
+    }
+
+    /**
+     * Get influencers assigned to a campaign (AJAX)
+     */
+    public function get_campaign_influencers($campaign_id)
+    {
+        if (!$this->input->is_ajax_request()) {
+            show_404();
+        }
+
+        $this->db->select('influencer_id');
+        $this->db->where('campaign_id', $campaign_id);
+        $influencers = $this->db->get(db_prefix() . 'im_campaign_influencers')->result_array();
+
+        header('Content-Type: application/json');
+        echo json_encode(['influencers' => $influencers]);
+    }
+
+    /**
+     * Get campaign contents grouped by influencer (AJAX)
+     */
+    public function get_campaign_contents_grouped($campaign_id)
+    {
+        if (!$this->input->is_ajax_request()) {
+            show_404();
+        }
+
+        $influencers = $this->campaigns_model->get_contents_by_influencer($campaign_id);
+
+        header('Content-Type: application/json');
+        echo json_encode(['influencers' => $influencers]);
+    }
+
+    /**
+     * Add content to campaign (AJAX)
+     */
+    public function add_campaign_content()
+    {
+        if (!$this->input->is_ajax_request()) {
+            show_404();
+        }
+
+        if (!has_permission('influencers_marketing', '', 'create')) {
+            echo json_encode(['success' => false, 'message' => 'Permission denied']);
+            return;
+        }
+
+        $data = $this->input->post();
+
+        $content_id = $this->campaigns_model->add_content($data);
+
+        if ($content_id) {
+            echo json_encode(['success' => true, 'content_id' => $content_id]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Failed to add content']);
+        }
+    }
+
+    /**
+     * Delete campaign content (AJAX)
+     */
+    public function delete_campaign_content($content_id)
+    {
+        if (!$this->input->is_ajax_request()) {
+            show_404();
+        }
+
+        if (!has_permission('influencers_marketing', '', 'delete')) {
+            echo json_encode(['success' => false, 'message' => 'Permission denied']);
+            return;
+        }
+
+        $success = $this->campaigns_model->delete_content($content_id);
+
+        echo json_encode(['success' => $success]);
+    }
+
+    /**
+     * Update content metrics (AJAX)
+     */
+    public function update_content_metrics($content_id)
+    {
+        if (!$this->input->is_ajax_request()) {
+            show_404();
+        }
+
+        if (!has_permission('influencers_marketing', '', 'edit')) {
+            echo json_encode(['success' => false, 'message' => 'Permission denied']);
+            return;
+        }
+
+        $data = $this->input->post();
+
+        $success = $this->campaigns_model->update_content($content_id, $data);
+
+        echo json_encode(['success' => $success]);
     }
 }
