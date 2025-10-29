@@ -142,6 +142,358 @@
                             </div>
                         </div>
 
+                        <!-- Social Media Section -->
+                        <hr class="mtop25" />
+                        <div class="row mtop25">
+                            <div class="col-md-12">
+                                <h4 class="bold">
+                                    <i class="fa fa-share-alt"></i> <?php echo _l('im_social_accounts'); ?>
+                                    <small class="text-muted">(<?php echo _l('optional'); ?>)</small>
+                                </h4>
+                                <p class="text-muted"><?php echo _l('add_social_media_accounts'); ?></p>
+                            </div>
+                        </div>
+
+                        <?php
+                        // Prepare existing social accounts data
+                        $existing_accounts = [];
+                        if (isset($influencer) && !empty($influencer['social_accounts'])) {
+                            foreach ($influencer['social_accounts'] as $account) {
+                                $existing_accounts[$account['platform']] = $account;
+                            }
+                        }
+                        ?>
+
+                        <!-- Instagram -->
+                        <div class="panel panel-default mtop15">
+                            <div class="panel-heading" style="background-color: #E1306C; color: white;">
+                                <i class="fa fa-instagram"></i> <strong>Instagram</strong>
+                            </div>
+                            <div class="panel-body">
+                                <?php if (isset($existing_accounts['instagram']['id'])): ?>
+                                    <input type="hidden" name="social_accounts[instagram][id]" value="<?php echo $existing_accounts['instagram']['id']; ?>">
+                                <?php endif; ?>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="instagram_username"><?php echo _l('im_username'); ?></label>
+                                            <div class="input-group">
+                                                <span class="input-group-addon">@</span>
+                                                <input type="text" name="social_accounts[instagram][username]" id="instagram_username" class="form-control" placeholder="username" value="<?php echo isset($existing_accounts['instagram']) ? e($existing_accounts['instagram']['username']) : ''; ?>">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="instagram_url"><?php echo _l('im_profile_url'); ?></label>
+                                            <input type="url" name="social_accounts[instagram][profile_url]" id="instagram_url" class="form-control" placeholder="https://instagram.com/username" value="<?php echo isset($existing_accounts['instagram']) ? e($existing_accounts['instagram']['profile_url']) : ''; ?>">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="instagram_followers"><?php echo _l('im_followers_count'); ?></label>
+                                            <input type="number" name="social_accounts[instagram][followers_count]" id="instagram_followers" class="form-control" placeholder="0" value="<?php echo isset($existing_accounts['instagram']) ? $existing_accounts['instagram']['followers_count'] : ''; ?>">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="instagram_engagement"><?php echo _l('im_engagement_rate'); ?> (%)</label>
+                                            <input type="number" name="social_accounts[instagram][engagement_rate]" id="instagram_engagement" class="form-control" step="0.01" placeholder="0.00" value="<?php echo isset($existing_accounts['instagram']) ? $existing_accounts['instagram']['engagement_rate'] : ''; ?>">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>&nbsp;</label><br>
+                                            <label>
+                                                <input type="checkbox" name="social_accounts[instagram][is_verified]" value="1" <?php echo (isset($existing_accounts['instagram']) && $existing_accounts['instagram']['is_verified']) ? 'checked' : ''; ?>>
+                                                <?php echo _l('im_is_verified'); ?>
+                                            </label>
+                                            <label class="mleft10">
+                                                <input type="checkbox" name="social_accounts[instagram][is_primary]" value="1" <?php echo (isset($existing_accounts['instagram']) && $existing_accounts['instagram']['is_primary']) ? 'checked' : ''; ?>>
+                                                <?php echo _l('im_is_primary'); ?>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TikTok -->
+                        <div class="panel panel-default">
+                            <div class="panel-heading" style="background-color: #000000; color: white;">
+                                <i class="fa fa-music"></i> <strong>TikTok</strong>
+                            </div>
+                            <div class="panel-body">
+                                <?php if (isset($existing_accounts['tiktok']['id'])): ?>
+                                    <input type="hidden" name="social_accounts[tiktok][id]" value="<?php echo $existing_accounts['tiktok']['id']; ?>">
+                                <?php endif; ?>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="tiktok_username"><?php echo _l('im_username'); ?></label>
+                                            <div class="input-group">
+                                                <span class="input-group-addon">@</span>
+                                                <input type="text" name="social_accounts[tiktok][username]" id="tiktok_username" class="form-control" placeholder="username" value="<?php echo isset($existing_accounts['tiktok']) ? e($existing_accounts['tiktok']['username']) : ''; ?>">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="tiktok_url"><?php echo _l('im_profile_url'); ?></label>
+                                            <input type="url" name="social_accounts[tiktok][profile_url]" id="tiktok_url" class="form-control" placeholder="https://tiktok.com/@username" value="<?php echo isset($existing_accounts['tiktok']) ? e($existing_accounts['tiktok']['profile_url']) : ''; ?>">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="tiktok_followers"><?php echo _l('im_followers_count'); ?></label>
+                                            <input type="number" name="social_accounts[tiktok][followers_count]" id="tiktok_followers" class="form-control" placeholder="0" value="<?php echo isset($existing_accounts['tiktok']) ? $existing_accounts['tiktok']['followers_count'] : ''; ?>">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="tiktok_engagement"><?php echo _l('im_engagement_rate'); ?> (%)</label>
+                                            <input type="number" name="social_accounts[tiktok][engagement_rate]" id="tiktok_engagement" class="form-control" step="0.01" placeholder="0.00" value="<?php echo isset($existing_accounts['tiktok']) ? $existing_accounts['tiktok']['engagement_rate'] : ''; ?>">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>&nbsp;</label><br>
+                                            <label>
+                                                <input type="checkbox" name="social_accounts[tiktok][is_verified]" value="1" <?php echo (isset($existing_accounts['tiktok']) && $existing_accounts['tiktok']['is_verified']) ? 'checked' : ''; ?>>
+                                                <?php echo _l('im_is_verified'); ?>
+                                            </label>
+                                            <label class="mleft10">
+                                                <input type="checkbox" name="social_accounts[tiktok][is_primary]" value="1" <?php echo (isset($existing_accounts['tiktok']) && $existing_accounts['tiktok']['is_primary']) ? 'checked' : ''; ?>>
+                                                <?php echo _l('im_is_primary'); ?>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- YouTube -->
+                        <div class="panel panel-default">
+                            <div class="panel-heading" style="background-color: #FF0000; color: white;">
+                                <i class="fa fa-youtube-play"></i> <strong>YouTube</strong>
+                            </div>
+                            <div class="panel-body">
+                                <?php if (isset($existing_accounts['youtube']['id'])): ?>
+                                    <input type="hidden" name="social_accounts[youtube][id]" value="<?php echo $existing_accounts['youtube']['id']; ?>">
+                                <?php endif; ?>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="youtube_username"><?php echo _l('im_username'); ?></label>
+                                            <div class="input-group">
+                                                <span class="input-group-addon">@</span>
+                                                <input type="text" name="social_accounts[youtube][username]" id="youtube_username" class="form-control" placeholder="username" value="<?php echo isset($existing_accounts['youtube']) ? e($existing_accounts['youtube']['username']) : ''; ?>">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="youtube_url"><?php echo _l('im_profile_url'); ?></label>
+                                            <input type="url" name="social_accounts[youtube][profile_url]" id="youtube_url" class="form-control" placeholder="https://youtube.com/@username" value="<?php echo isset($existing_accounts['youtube']) ? e($existing_accounts['youtube']['profile_url']) : ''; ?>">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="youtube_followers"><?php echo _l('im_followers_count'); ?> (Abonnés)</label>
+                                            <input type="number" name="social_accounts[youtube][followers_count]" id="youtube_followers" class="form-control" placeholder="0" value="<?php echo isset($existing_accounts['youtube']) ? $existing_accounts['youtube']['followers_count'] : ''; ?>">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="youtube_engagement"><?php echo _l('im_engagement_rate'); ?> (%)</label>
+                                            <input type="number" name="social_accounts[youtube][engagement_rate]" id="youtube_engagement" class="form-control" step="0.01" placeholder="0.00" value="<?php echo isset($existing_accounts['youtube']) ? $existing_accounts['youtube']['engagement_rate'] : ''; ?>">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>&nbsp;</label><br>
+                                            <label>
+                                                <input type="checkbox" name="social_accounts[youtube][is_verified]" value="1" <?php echo (isset($existing_accounts['youtube']) && $existing_accounts['youtube']['is_verified']) ? 'checked' : ''; ?>>
+                                                <?php echo _l('im_is_verified'); ?>
+                                            </label>
+                                            <label class="mleft10">
+                                                <input type="checkbox" name="social_accounts[youtube][is_primary]" value="1" <?php echo (isset($existing_accounts['youtube']) && $existing_accounts['youtube']['is_primary']) ? 'checked' : ''; ?>>
+                                                <?php echo _l('im_is_primary'); ?>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Facebook -->
+                        <div class="panel panel-default">
+                            <div class="panel-heading" style="background-color: #1877F2; color: white;">
+                                <i class="fa fa-facebook"></i> <strong>Facebook</strong>
+                            </div>
+                            <div class="panel-body">
+                                <?php if (isset($existing_accounts['facebook']['id'])): ?>
+                                    <input type="hidden" name="social_accounts[facebook][id]" value="<?php echo $existing_accounts['facebook']['id']; ?>">
+                                <?php endif; ?>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="facebook_username"><?php echo _l('im_username'); ?></label>
+                                            <input type="text" name="social_accounts[facebook][username]" id="facebook_username" class="form-control" placeholder="username" value="<?php echo isset($existing_accounts['facebook']) ? e($existing_accounts['facebook']['username']) : ''; ?>">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="facebook_url"><?php echo _l('im_profile_url'); ?></label>
+                                            <input type="url" name="social_accounts[facebook][profile_url]" id="facebook_url" class="form-control" placeholder="https://facebook.com/username" value="<?php echo isset($existing_accounts['facebook']) ? e($existing_accounts['facebook']['profile_url']) : ''; ?>">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="facebook_followers"><?php echo _l('im_followers_count'); ?></label>
+                                            <input type="number" name="social_accounts[facebook][followers_count]" id="facebook_followers" class="form-control" placeholder="0" value="<?php echo isset($existing_accounts['facebook']) ? $existing_accounts['facebook']['followers_count'] : ''; ?>">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="facebook_engagement"><?php echo _l('im_engagement_rate'); ?> (%)</label>
+                                            <input type="number" name="social_accounts[facebook][engagement_rate]" id="facebook_engagement" class="form-control" step="0.01" placeholder="0.00" value="<?php echo isset($existing_accounts['facebook']) ? $existing_accounts['facebook']['engagement_rate'] : ''; ?>">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>&nbsp;</label><br>
+                                            <label>
+                                                <input type="checkbox" name="social_accounts[facebook][is_verified]" value="1" <?php echo (isset($existing_accounts['facebook']) && $existing_accounts['facebook']['is_verified']) ? 'checked' : ''; ?>>
+                                                <?php echo _l('im_is_verified'); ?>
+                                            </label>
+                                            <label class="mleft10">
+                                                <input type="checkbox" name="social_accounts[facebook][is_primary]" value="1" <?php echo (isset($existing_accounts['facebook']) && $existing_accounts['facebook']['is_primary']) ? 'checked' : ''; ?>>
+                                                <?php echo _l('im_is_primary'); ?>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- X (Twitter) -->
+                        <div class="panel panel-default">
+                            <div class="panel-heading" style="background-color: #000000; color: white;">
+                                <i class="fa fa-twitter"></i> <strong>X (Twitter)</strong>
+                            </div>
+                            <div class="panel-body">
+                                <?php if (isset($existing_accounts['twitter']['id'])): ?>
+                                    <input type="hidden" name="social_accounts[twitter][id]" value="<?php echo $existing_accounts['twitter']['id']; ?>">
+                                <?php endif; ?>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="twitter_username"><?php echo _l('im_username'); ?></label>
+                                            <div class="input-group">
+                                                <span class="input-group-addon">@</span>
+                                                <input type="text" name="social_accounts[twitter][username]" id="twitter_username" class="form-control" placeholder="username" value="<?php echo isset($existing_accounts['twitter']) ? e($existing_accounts['twitter']['username']) : ''; ?>">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="twitter_url"><?php echo _l('im_profile_url'); ?></label>
+                                            <input type="url" name="social_accounts[twitter][profile_url]" id="twitter_url" class="form-control" placeholder="https://x.com/username" value="<?php echo isset($existing_accounts['twitter']) ? e($existing_accounts['twitter']['profile_url']) : ''; ?>">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="twitter_followers"><?php echo _l('im_followers_count'); ?></label>
+                                            <input type="number" name="social_accounts[twitter][followers_count]" id="twitter_followers" class="form-control" placeholder="0" value="<?php echo isset($existing_accounts['twitter']) ? $existing_accounts['twitter']['followers_count'] : ''; ?>">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="twitter_engagement"><?php echo _l('im_engagement_rate'); ?> (%)</label>
+                                            <input type="number" name="social_accounts[twitter][engagement_rate]" id="twitter_engagement" class="form-control" step="0.01" placeholder="0.00" value="<?php echo isset($existing_accounts['twitter']) ? $existing_accounts['twitter']['engagement_rate'] : ''; ?>">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>&nbsp;</label><br>
+                                            <label>
+                                                <input type="checkbox" name="social_accounts[twitter][is_verified]" value="1" <?php echo (isset($existing_accounts['twitter']) && $existing_accounts['twitter']['is_verified']) ? 'checked' : ''; ?>>
+                                                <?php echo _l('im_is_verified'); ?>
+                                            </label>
+                                            <label class="mleft10">
+                                                <input type="checkbox" name="social_accounts[twitter][is_primary]" value="1" <?php echo (isset($existing_accounts['twitter']) && $existing_accounts['twitter']['is_primary']) ? 'checked' : ''; ?>>
+                                                <?php echo _l('im_is_primary'); ?>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Snapchat -->
+                        <div class="panel panel-default">
+                            <div class="panel-heading" style="background-color: #FFFC00; color: #000;">
+                                <i class="fa fa-snapchat-ghost"></i> <strong>Snapchat</strong>
+                            </div>
+                            <div class="panel-body">
+                                <?php if (isset($existing_accounts['snapchat']['id'])): ?>
+                                    <input type="hidden" name="social_accounts[snapchat][id]" value="<?php echo $existing_accounts['snapchat']['id']; ?>">
+                                <?php endif; ?>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="snapchat_username"><?php echo _l('im_username'); ?></label>
+                                            <input type="text" name="social_accounts[snapchat][username]" id="snapchat_username" class="form-control" placeholder="username" value="<?php echo isset($existing_accounts['snapchat']) ? e($existing_accounts['snapchat']['username']) : ''; ?>">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="snapchat_url"><?php echo _l('im_profile_url'); ?></label>
+                                            <input type="url" name="social_accounts[snapchat][profile_url]" id="snapchat_url" class="form-control" placeholder="https://snapchat.com/add/username" value="<?php echo isset($existing_accounts['snapchat']) ? e($existing_accounts['snapchat']['profile_url']) : ''; ?>">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="snapchat_followers"><?php echo _l('im_followers_count'); ?></label>
+                                            <input type="number" name="social_accounts[snapchat][followers_count]" id="snapchat_followers" class="form-control" placeholder="0" value="<?php echo isset($existing_accounts['snapchat']) ? $existing_accounts['snapchat']['followers_count'] : ''; ?>">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="snapchat_engagement"><?php echo _l('im_engagement_rate'); ?> (%)</label>
+                                            <input type="number" name="social_accounts[snapchat][engagement_rate]" id="snapchat_engagement" class="form-control" step="0.01" placeholder="0.00" value="<?php echo isset($existing_accounts['snapchat']) ? $existing_accounts['snapchat']['engagement_rate'] : ''; ?>">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>&nbsp;</label><br>
+                                            <label>
+                                                <input type="checkbox" name="social_accounts[snapchat][is_verified]" value="1" <?php echo (isset($existing_accounts['snapchat']) && $existing_accounts['snapchat']['is_verified']) ? 'checked' : ''; ?>>
+                                                <?php echo _l('im_is_verified'); ?>
+                                            </label>
+                                            <label class="mleft10">
+                                                <input type="checkbox" name="social_accounts[snapchat][is_primary]" value="1" <?php echo (isset($existing_accounts['snapchat']) && $existing_accounts['snapchat']['is_primary']) ? 'checked' : ''; ?>>
+                                                <?php echo _l('im_is_primary'); ?>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="row mtop25">
                             <div class="col-md-12">
                                 <button type="submit" class="btn btn-primary">

@@ -123,6 +123,32 @@ class Influencers_marketing extends AdminController
         if ($this->input->post()) {
             $data = $this->input->post();
 
+            // Transform social_accounts from nested array to array of arrays with platform key
+            if (isset($data['social_accounts']) && is_array($data['social_accounts'])) {
+                $transformed_social_accounts = [];
+                foreach ($data['social_accounts'] as $platform => $account_data) {
+                    // Only add if at least username or profile_url is provided
+                    if (!empty($account_data['username']) || !empty($account_data['profile_url'])) {
+                        $account_data['platform'] = $platform;
+
+                        // Convert is_verified and is_primary checkboxes to boolean
+                        $account_data['is_verified'] = isset($account_data['is_verified']) ? 1 : 0;
+                        $account_data['is_primary'] = isset($account_data['is_primary']) ? 1 : 0;
+
+                        // Convert empty numeric fields to 0
+                        if (isset($account_data['followers_count']) && $account_data['followers_count'] === '') {
+                            $account_data['followers_count'] = 0;
+                        }
+                        if (isset($account_data['engagement_rate']) && $account_data['engagement_rate'] === '') {
+                            $account_data['engagement_rate'] = 0;
+                        }
+
+                        $transformed_social_accounts[] = $account_data;
+                    }
+                }
+                $data['social_accounts'] = $transformed_social_accounts;
+            }
+
             // Handle file upload
             if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['name'] != '') {
                 $upload_path = FCPATH . 'uploads/influencers_marketing/profiles/';
