@@ -11,6 +11,23 @@
                         <h4 class="no-margin"><?php echo _l('settings'); ?></h4>
                         <hr class="hr-panel-heading" />
 
+                        <!-- Permissions Section -->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="alert alert-info">
+                                    <h5 class="bold"><i class="fa fa-users"></i> Permissions des employés</h5>
+                                    <p>Par défaut, seuls les administrateurs peuvent accéder au module Influencers Marketing.</p>
+                                    <p>Cliquez sur le bouton ci-dessous pour activer automatiquement la permission "Voir" pour tous les rôles staff existants.</p>
+                                    <p>Pour configurer des permissions plus avancées (créer, modifier, supprimer), allez dans <strong>Setup > Roles</strong>.</p>
+                                    <a href="<?php echo admin_url('influencers_marketing/enable_staff_permissions'); ?>" class="btn btn-success">
+                                        <i class="fa fa-unlock"></i> Activer les permissions pour tous les employés
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr />
+
                         <?php echo form_open(admin_url('influencers_marketing/settings')); ?>
 
                         <div class="row">

@@ -390,6 +390,30 @@ foreach ($capabilities as $capability) {
     }
 }
 
+// Enable view permission by default for all staff roles
+$CI->db->select('roleid');
+$roles = $CI->db->get(db_prefix() . 'roles')->result_array();
+
+foreach ($roles as $role) {
+    // Check if permission already exists for this role
+    $CI->db->where('permissionid', 'influencers_marketing');
+    $CI->db->where('roleid', $role['roleid']);
+    $exists = $CI->db->get(db_prefix() . 'staff_permissions')->row();
+
+    if (!$exists) {
+        // Grant view permission by default to all staff roles
+        $CI->db->insert(db_prefix() . 'staff_permissions', [
+            'permissionid' => 'influencers_marketing',
+            'roleid' => $role['roleid'],
+            'view' => 1,
+            'view_own' => 1,
+            'create' => 0,
+            'edit' => 0,
+            'delete' => 0,
+        ]);
+    }
+}
+
 // Create default folder for uploads
 $upload_path = FCPATH . 'uploads/influencers_marketing';
 if (!file_exists($upload_path)) {

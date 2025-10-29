@@ -801,4 +801,61 @@ class Influencers_marketing extends AdminController
 
         echo json_encode(['success' => $success > 0, 'count' => $success]);
     }
+
+    /**
+     * Enable permissions for all staff roles (one-time setup)
+     * Access via: admin/influencers_marketing/enable_staff_permissions
+     */
+    public function enable_staff_permissions()
+    {
+        if (!is_admin()) {
+            access_denied('influencers_marketing');
+        }
+
+        // Get all roles
+        $this->db->select('roleid, name');
+        $roles = $this->db->get(db_prefix() . 'roles')->result_array();
+
+        $updated = 0;
+        $already_exists = 0;
+
+        foreach ($roles as $role) {
+            // Check if permission already exists for this role
+            $this->db->where('permissionid', 'influencers_marketing');
+            $this->db->where('roleid', $role['roleid']);
+            $exists = $this->db->get(db_prefix() . 'staff_permissions')->row();
+
+            if (!$exists) {
+                // Create permission with view enabled by default
+                $this->db->insert(db_prefix() . 'staff_permissions', [
+                    'permissionid' => 'influencers_marketing',
+                    'roleid' => $role['roleid'],
+                    'view' => 1,
+                    'view_own' => 1,
+                    'create' => 0,
+                    'edit' => 0,
+                    'delete' => 0,
+                ]);
+
+                $updated++;
+            } else {
+                // Permission exists, enable view if disabled
+                if ($exists->view == 0) {
+                    $this->db->where('permissionid', 'influencers_marketing');
+                    $this->db->where('roleid', $role['roleid']);
+                    $this->db->update(db_prefix() . 'staff_permissions', [
+                        'view' => 1,
+                        'view_own' => 1,
+                    ]);
+
+                    $updated++;
+                } else {
+                    $already_exists++;
+                }
+            }
+        }
+
+        set_alert('success', "Permissions activées pour $updated rôle(s). $already_exists étaient déjà actives.");
+        redirect(admin_url('influencers_marketing/settings'));
+    }
 }
