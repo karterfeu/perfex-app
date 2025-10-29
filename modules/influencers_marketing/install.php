@@ -288,6 +288,43 @@ if (!$CI->db->table_exists(db_prefix() . 'im_settings')) {
     ) ENGINE=InnoDB DEFAULT CHARSET=' . $CI->db->char_set . ';');
 }
 
+// Table 13: Campaign Contents (published content tracking)
+if (!$CI->db->table_exists(db_prefix() . 'im_campaign_contents')) {
+    $CI->db->query('CREATE TABLE `' . db_prefix() . 'im_campaign_contents` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `campaign_id` int(11) NOT NULL,
+        `campaign_influencer_id` int(11) DEFAULT NULL,
+        `influencer_id` int(11) NOT NULL,
+        `platform` varchar(50) NOT NULL,
+        `content_type` varchar(50) DEFAULT \'post\',
+        `content_url` varchar(500) NOT NULL,
+        `title` varchar(255) DEFAULT NULL,
+        `description` text,
+        `posted_at` datetime DEFAULT NULL,
+        `views_count` bigint(20) DEFAULT 0,
+        `likes_count` int(11) DEFAULT 0,
+        `comments_count` int(11) DEFAULT 0,
+        `shares_count` int(11) DEFAULT 0,
+        `saves_count` int(11) DEFAULT 0,
+        `clicks_count` int(11) DEFAULT 0,
+        `engagement_rate` decimal(5,2) DEFAULT 0.00,
+        `reach` bigint(20) DEFAULT 0,
+        `impressions` bigint(20) DEFAULT 0,
+        `last_metrics_sync` datetime DEFAULT NULL,
+        `thumbnail_url` varchar(500) DEFAULT NULL,
+        `is_sponsored` tinyint(1) DEFAULT 1,
+        `created_at` datetime DEFAULT NULL,
+        `updated_at` datetime DEFAULT NULL,
+        `created_by` int(11) DEFAULT NULL,
+        PRIMARY KEY (`id`),
+        KEY `campaign_id` (`campaign_id`),
+        KEY `campaign_influencer_id` (`campaign_influencer_id`),
+        KEY `influencer_id` (`influencer_id`),
+        KEY `platform` (`platform`),
+        KEY `posted_at` (`posted_at`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=' . $CI->db->char_set . ';');
+}
+
 // Insert default settings
 $default_settings = [
     ['name' => 'im_default_currency', 'value' => 'EUR', 'autoload' => 1],

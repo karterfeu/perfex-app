@@ -7,6 +7,7 @@ class Campaigns_model extends App_Model
     private $table_campaigns;
     private $table_campaign_influencers;
     private $table_deliverables;
+    private $table_campaign_contents;
 
     public function __construct()
     {
@@ -15,6 +16,7 @@ class Campaigns_model extends App_Model
         $this->table_campaigns = db_prefix() . 'im_campaigns';
         $this->table_campaign_influencers = db_prefix() . 'im_campaign_influencers';
         $this->table_deliverables = db_prefix() . 'im_deliverables';
+        $this->table_campaign_contents = db_prefix() . 'im_campaign_contents';
     }
 
     /**
@@ -710,5 +712,244 @@ class Campaigns_model extends App_Model
 
             $this->db->insert(db_prefix() . 'activity_log', $log_data);
         }
+    }
+
+    // ============================================
+    // CAMPAIGN CONTENTS MANAGEMENT
+    // ============================================
+
+    /**
+     * Get all contents for a campaign
+     */
+    public function get_campaign_contents($campaign_id, $influencer_id = null)
+    {
+        $this->db->select($this->table_campaign_contents . '.*,
+            i.firstname, i.lastname, i.profile_picture');
+        $this->db->from($this->table_campaign_contents);
+        $this->db->join(db_prefix() . 'im_influencers i', 'i.id = ' . $this->table_campaign_contents . '.influencer_id');
+        $this->db->where($this->table_campaign_contents . '.campaign_id', $campaign_id);
+
+        if ($influencer_id) {
+            $this->db->where($this->table_campaign_contents . '.influencer_id', $influencer_id);
+        }
+
+        $this->db->order_by($this->table_campaign_contents . '.posted_at', 'DESC');
+
+        return $this->db->get()->result_array();
+    }
+
+    /**
+     * Get contents organized by influencer
+     */
+    public function get_contents_by_influencer($campaign_id)
+    {
+        // Get all influencers in this campaign
+        $this->db->select('ci.influencer_id, i.firstname, i.lastname, i.profile_picture, sa.platform, sa.username');
+        $this->db->from($this->table_campaign_influencers . ' ci');
+        $this->db->join(db_prefix() . 'im_influencers i', 'i.id = ci.influencer_id');
+        $this->db->join(db_prefix() . 'im_social_accounts sa', 'sa.influencer_id = i.id AND sa.is_primary = 1', 'left');
+        $this->db->where('ci.campaign_id', $campaign_id);
+        $influencers = $this->db->get()->result_array();
+
+        // Get contents for each influencer
+        foreach ($influencers as &$influencer) {
+            $influencer['contents'] = $this->get_campaign_contents($campaign_id, $influencer['influencer_id']);
+        }
+
+        return $influencers;
+    }
+
+    /**
+     * Get single content by ID
+     */
+    public function get_content($content_id)
+    {
+        $this->db->where('id', $content_id);
+        return $this->db->get($this->table_campaign_contents)->row_array();
+    }
+
+    /**
+     * Add content to campaign
+     */
+    public function add_content($data)
+    {
+        // Auto-detect platform from URL if not provided
+        if (empty($data['platform']) && !empty($data['content_url'])) {
+            $data['platform'] = $this->detect_platform_from_url($data['content_url']);
+        }
+
+        // Auto-detect content type from URL if not provided
+        if (empty($data['content_type']) && !empty($data['content_url'])) {
+            $data['content_type'] = $this->detect_content_type_from_url($data['content_url'], $data['platform']);
+        }
+
+        $data['created_at'] = date('Y-m-d H:i:s');
+        $data['created_by'] = get_staff_user_id();
+
+        // Calculate engagement rate if we have the data
+        if (isset($data['likes_count']) && isset($data['views_count']) && $data['views_count'] > 0) {
+            $total_engagement = ($data['likes_count'] ?? 0) + ($data['comments_count'] ?? 0) + ($data['shares_count'] ?? 0);
+            $data['engagement_rate'] = ($total_engagement / $data['views_count']) * 100;
+        }
+
+        $this->db->insert($this->table_campaign_contents, $data);
+        $insert_id = $this->db->insert_id();
+
+        if ($insert_id) {
+            $this->log_campaign_activity($data['campaign_id'], 'Contenu ajouté: ' . $data['content_url']);
+        }
+
+        return $insert_id;
+    }
+
+    /**
+     * Update content
+     */
+    public function update_content($content_id, $data)
+    {
+        $data['updated_at'] = date('Y-m-d H:i:s');
+
+        // Recalculate engagement rate if metrics changed
+        $content = $this->get_content($content_id);
+        if (isset($data['likes_count']) || isset($data['views_count'])) {
+            $views = $data['views_count'] ?? $content['views_count'];
+            if ($views > 0) {
+                $likes = $data['likes_count'] ?? $content['likes_count'];
+                $comments = $data['comments_count'] ?? $content['comments_count'];
+                $shares = $data['shares_count'] ?? $content['shares_count'];
+                $total_engagement = $likes + $comments + $shares;
+                $data['engagement_rate'] = ($total_engagement / $views) * 100;
+            }
+        }
+
+        $this->db->where('id', $content_id);
+        $result = $this->db->update($this->table_campaign_contents, $data);
+
+        if ($result && $content) {
+            $this->log_campaign_activity($content['campaign_id'], 'Contenu mis à jour: ' . $content['content_url']);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Delete content
+     */
+    public function delete_content($content_id)
+    {
+        $content = $this->get_content($content_id);
+
+        if ($content) {
+            $this->db->where('id', $content_id);
+            $result = $this->db->delete($this->table_campaign_contents);
+
+            if ($result) {
+                $this->log_campaign_activity($content['campaign_id'], 'Contenu supprimé: ' . $content['content_url']);
+            }
+
+            return $result;
+        }
+
+        return false;
+    }
+
+    /**
+     * Get aggregated metrics for a campaign
+     */
+    public function get_campaign_content_metrics($campaign_id)
+    {
+        $this->db->select('
+            COUNT(*) as total_contents,
+            SUM(views_count) as total_views,
+            SUM(likes_count) as total_likes,
+            SUM(comments_count) as total_comments,
+            SUM(shares_count) as total_shares,
+            SUM(saves_count) as total_saves,
+            SUM(clicks_count) as total_clicks,
+            AVG(engagement_rate) as avg_engagement_rate,
+            SUM(reach) as total_reach,
+            SUM(impressions) as total_impressions
+        ');
+        $this->db->where('campaign_id', $campaign_id);
+        $metrics = $this->db->get($this->table_campaign_contents)->row_array();
+
+        // Get breakdown by platform
+        $this->db->select('platform, COUNT(*) as count, SUM(views_count) as views, SUM(likes_count) as likes');
+        $this->db->where('campaign_id', $campaign_id);
+        $this->db->group_by('platform');
+        $metrics['by_platform'] = $this->db->get($this->table_campaign_contents)->result_array();
+
+        return $metrics;
+    }
+
+    /**
+     * Detect platform from URL
+     */
+    private function detect_platform_from_url($url)
+    {
+        $url = strtolower($url);
+
+        if (strpos($url, 'instagram.com') !== false) return 'instagram';
+        if (strpos($url, 'tiktok.com') !== false) return 'tiktok';
+        if (strpos($url, 'youtube.com') !== false || strpos($url, 'youtu.be') !== false) return 'youtube';
+        if (strpos($url, 'facebook.com') !== false || strpos($url, 'fb.com') !== false) return 'facebook';
+        if (strpos($url, 'twitter.com') !== false || strpos($url, 'x.com') !== false) return 'twitter';
+        if (strpos($url, 'snapchat.com') !== false) return 'snapchat';
+        if (strpos($url, 'linkedin.com') !== false) return 'linkedin';
+        if (strpos($url, 'twitch.tv') !== false) return 'twitch';
+
+        return 'other';
+    }
+
+    /**
+     * Detect content type from URL
+     */
+    private function detect_content_type_from_url($url, $platform)
+    {
+        $url = strtolower($url);
+
+        switch ($platform) {
+            case 'instagram':
+                if (strpos($url, '/reel/') !== false) return 'reel';
+                if (strpos($url, '/stories/') !== false) return 'story';
+                if (strpos($url, '/p/') !== false) return 'post';
+                return 'post';
+
+            case 'tiktok':
+                return 'video';
+
+            case 'youtube':
+                if (strpos($url, '/shorts/') !== false) return 'short';
+                return 'video';
+
+            case 'facebook':
+                if (strpos($url, '/videos/') !== false) return 'video';
+                return 'post';
+
+            case 'twitter':
+                return 'tweet';
+
+            default:
+                return 'post';
+        }
+    }
+
+    /**
+     * Bulk add contents from array
+     */
+    public function bulk_add_contents($campaign_id, $influencer_id, $contents)
+    {
+        $added = 0;
+
+        foreach ($contents as $content) {
+            $content['campaign_id'] = $campaign_id;
+            $content['influencer_id'] = $influencer_id;
+
+            if ($this->add_content($content)) {
+                $added++;
+            }
+        }
+
+        return $added;
     }
 }
