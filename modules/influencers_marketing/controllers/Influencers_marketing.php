@@ -123,60 +123,73 @@ class Influencers_marketing extends AdminController
         if ($this->input->post()) {
             $data = $this->input->post();
 
-            // Transform social_accounts from nested array to array of arrays with platform key
-            if (isset($data['social_accounts']) && is_array($data['social_accounts'])) {
-                $transformed_social_accounts = [];
-                foreach ($data['social_accounts'] as $platform => $account_data) {
-                    // Only add if at least username or profile_url is provided
-                    if (!empty($account_data['username']) || !empty($account_data['profile_url'])) {
-                        $account_data['platform'] = $platform;
+            try {
+                // Transform social_accounts from nested array to array of arrays with platform key
+                if (isset($data['social_accounts']) && is_array($data['social_accounts'])) {
+                    $transformed_social_accounts = [];
+                    foreach ($data['social_accounts'] as $platform => $account_data) {
+                        // Only add if at least username or profile_url is provided
+                        if (!empty($account_data['username']) || !empty($account_data['profile_url'])) {
+                            $account_data['platform'] = $platform;
 
-                        // Convert is_verified and is_primary checkboxes to boolean
-                        $account_data['is_verified'] = isset($account_data['is_verified']) ? 1 : 0;
-                        $account_data['is_primary'] = isset($account_data['is_primary']) ? 1 : 0;
+                            // Convert is_verified and is_primary checkboxes to boolean
+                            $account_data['is_verified'] = isset($account_data['is_verified']) ? 1 : 0;
+                            $account_data['is_primary'] = isset($account_data['is_primary']) ? 1 : 0;
 
-                        // Convert empty numeric fields to 0
-                        if (isset($account_data['followers_count']) && $account_data['followers_count'] === '') {
-                            $account_data['followers_count'] = 0;
+                            // Convert empty numeric fields to 0 or null
+                            $account_data['followers_count'] = (!empty($account_data['followers_count'])) ? (int)$account_data['followers_count'] : 0;
+                            $account_data['engagement_rate'] = (!empty($account_data['engagement_rate'])) ? (float)$account_data['engagement_rate'] : 0;
+
+                            $transformed_social_accounts[] = $account_data;
                         }
-                        if (isset($account_data['engagement_rate']) && $account_data['engagement_rate'] === '') {
-                            $account_data['engagement_rate'] = 0;
-                        }
+                    }
+                    $data['social_accounts'] = $transformed_social_accounts;
+                }
 
-                        $transformed_social_accounts[] = $account_data;
+                // Handle file upload
+                if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['name'] != '') {
+                    $upload_path = FCPATH . 'uploads/influencers_marketing/profiles/';
+
+                    // Create directory if it doesn't exist
+                    if (!file_exists($upload_path)) {
+                        @mkdir($upload_path, 0755, true);
+                    }
+
+                    $config['upload_path'] = $upload_path;
+                    $config['allowed_types'] = 'jpg|jpeg|png|gif';
+                    $config['max_size'] = 2048;
+                    $config['encrypt_name'] = true;
+
+                    $this->load->library('upload', $config);
+
+                    if ($this->upload->do_upload('profile_picture')) {
+                        $upload_data = $this->upload->data();
+                        $data['profile_picture'] = 'uploads/influencers_marketing/profiles/' . $upload_data['file_name'];
                     }
                 }
-                $data['social_accounts'] = $transformed_social_accounts;
-            }
 
-            // Handle file upload
-            if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['name'] != '') {
-                $upload_path = FCPATH . 'uploads/influencers_marketing/profiles/';
-                $config['upload_path'] = $upload_path;
-                $config['allowed_types'] = 'jpg|jpeg|png|gif';
-                $config['max_size'] = 2048;
-                $config['encrypt_name'] = true;
-
-                $this->load->library('upload', $config);
-
-                if ($this->upload->do_upload('profile_picture')) {
-                    $upload_data = $this->upload->data();
-                    $data['profile_picture'] = 'uploads/influencers_marketing/profiles/' . $upload_data['file_name'];
+                if ($id == '') {
+                    $influencer_id = $this->influencers_model->add($data);
+                    if ($influencer_id) {
+                        set_alert('success', _l('added_successfully', _l('im_influencer')));
+                        redirect(admin_url('influencers_marketing/influencer/' . $influencer_id));
+                    } else {
+                        set_alert('danger', 'Erreur lors de l\'ajout de l\'influenceur');
+                        redirect(admin_url('influencers_marketing/influencer_form'));
+                    }
+                } else {
+                    $success = $this->influencers_model->update($id, $data);
+                    if ($success) {
+                        set_alert('success', _l('updated_successfully', _l('im_influencer')));
+                    } else {
+                        set_alert('danger', 'Erreur lors de la mise à jour');
+                    }
+                    redirect(admin_url('influencers_marketing/influencer/' . $id));
                 }
-            }
-
-            if ($id == '') {
-                $influencer_id = $this->influencers_model->add($data);
-                if ($influencer_id) {
-                    set_alert('success', _l('added_successfully', _l('im_influencer')));
-                    redirect(admin_url('influencers_marketing/influencer/' . $influencer_id));
-                }
-            } else {
-                $success = $this->influencers_model->update($id, $data);
-                if ($success) {
-                    set_alert('success', _l('updated_successfully', _l('im_influencer')));
-                }
-                redirect(admin_url('influencers_marketing/influencer/' . $id));
+            } catch (Exception $e) {
+                log_message('error', 'Influencer form error: ' . $e->getMessage());
+                set_alert('danger', 'Une erreur est survenue : ' . $e->getMessage());
+                redirect(admin_url('influencers_marketing/influencer_form' . ($id ? '/' . $id : '')));
             }
         }
 
